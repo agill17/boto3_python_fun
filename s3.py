@@ -17,10 +17,10 @@ def bucket_exists(name):
 	s3 = boto3.client('s3')
 	bucket_names = get_all_bucket_names()
 	if name in bucket_names:
-		print ("The bucket %s already exists" % name)
+		print ("INFO: The bucket %s already exists" % name)
 		return True
 	else:
-		print ("The bucket %s does not exists" % name)
+		print ("INFO: The bucket %s does not exists" % name)
 		return False
 
 
@@ -36,8 +36,9 @@ def delete_bucket(name):
 	s3 = boto3.client('s3')
 	if name != None and bucket_exists(name) == True:
 		s3.delete_bucket(Bucket=name)
-		print ("Bucker %s deleted!" % name)
+		print ("Bucket %s deleted!" % name)
 
 
-create_bucket("amrit-test-boto3-bucket2")
+# create_bucket("amrit-test-boto3-bucket2")
+delete_bucket("amrit-test-boto3-bucket2")
 # bucket_exists("amrit-test-boto3-bucket2")
