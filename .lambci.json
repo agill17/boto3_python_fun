@@ -1,0 +1,3 @@
+{
+  "cmd": "tar -cf test.zip boto3_python_fun"
+}
