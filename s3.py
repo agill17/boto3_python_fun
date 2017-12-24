@@ -58,6 +58,8 @@ def delete_bucket(name):
 	 	s3.delete_bucket(Bucket=name)
 	 	print ("INFO: Bucket %s deleted!" % name)
 
+
+
 #delete_bucket('amrit-test-boto3-bucket2')
 create_bucket("amrit-test-boto3-bucket2")
 for x in range(1,10):
