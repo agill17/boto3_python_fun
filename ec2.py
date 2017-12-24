@@ -22,8 +22,9 @@ def create_instance(name, tag_key, tag_val, region='us-east-1'):
 	    KeyName = 'imac_new',
 	    InstanceType = 't2.micro'
 	)
+	instance_id = instance[0].id
 	ec2.create_tags(
-                    Resources = ['i-06531c6653fdaed9e'],
+                    Resources = [instance_id],
                     Tags = [{'Key': tag_key, 'Value': tag_val}]
                     )
 
@@ -35,12 +36,13 @@ def terminate_instance(instance_id=None, region='us-east-1'):
 		instances = get_all_instances(region)
 		for each in instances:
 			each.terminate()
+			print ("Terminating: %s " % each)
 	else:
 		ec2.instances.filter(InstanceIds=instance_id).terminate()
 
 
-create_instance('test', 'Key_name', 'Value_amrit-test')
-get_all_instances()
+# create_instance('test', 'Key_name1', 'Value_amrit-test1')
+# get_all_instances()
 terminate_instance()
 
 
