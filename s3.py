@@ -28,13 +28,14 @@ def create_bucket(name):
 	exists = bucket_exists(name)
 	if name != None and exists == False:
 		s3.create_bucket(Bucket=name)
-		print ("INFO: cdCreated new s3 bucket: %s" % name)
+		print ("INFO: Created new s3 bucket: %s" % name)
 
 
-def create_folder_in_bucket(bucket_name, folder_name = 'test_bucket'):
+def create_folder_in_bucket(bucket_name, acl, folder_name = 'test_bucket'):
 	s3 = boto3.client('s3')
 	if bucket_exists(bucket_name):
 		s3.put_object(Bucket=bucket_name,Key=folder_name+'/')
+		s3.put_object_acl(ACL=acl, Bucket=bucket_name, Key=folder_name+'/')
 		print("INFO: New Object has been placed: %s" % folder_name)
 	else:
 		print ('ERROR: Bucket %s does not exist!!!' % bucket_name)
@@ -60,6 +61,6 @@ def delete_bucket(name):
 #delete_bucket('amrit-test-boto3-bucket2')
 create_bucket("amrit-test-boto3-bucket2")
 for x in range(1,10):
-	create_folder_in_bucket("amrit-test-boto3-bucket2", 'test-folder-'+str(x))
+	create_folder_in_bucket("amrit-test-boto3-bucket2", 'public-read', 'test-folder-'+str(x))
 delete_bucket("amrit-test-boto3-bucket2")
 
