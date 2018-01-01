@@ -59,10 +59,24 @@ def delete_bucket(name):
 	 	print ("INFO: Bucket %s deleted!" % name)
 
 
+def upload_to_s3(file, bucket, folder=None):
+	if bucket_exists(bucket) and os.path.isfile(file):
+		if '/' in file:
+			### if passed as an abs path -> get the file name for key
+			### Do not re-create the abs path structure in s3 -- EH
+			s3 = boto3.client('s3')
+			obj_to_upload = open(file, 'rb')
+			name= file.split('/')[-1]
+			s3.upload_fileobj(obj_to_upload, bucket, name)
+	else:
+		raise Exception("Does the File Exists? Does the Bucket exists?")
+
 
 #delete_bucket('amrit-test-boto3-bucket2')
 create_bucket("amrit-test-boto3-bucket2")
 for x in range(1,10):
 	create_folder_in_bucket("amrit-test-boto3-bucket2", 'public-read', 'test-folder-'+str(x))
-delete_bucket("amrit-test-boto3-bucket2")
+upload_to_s3('/Users/amritgill/Python/Automating_the_boring_stuff/lists.py','amrit-test-boto3-bucket2')
+# delete_bucket("amrit-test-boto3-bucket2")
+
 

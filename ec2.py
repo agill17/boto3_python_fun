@@ -41,8 +41,8 @@ def terminate_instance(instance_id=None, region='us-east-1'):
 		ec2.instances.filter(InstanceIds=instance_id).terminate()
 
 
-# create_instance('test', 'Key_name1', 'Value_amrit-test1')
+create_instance('test', 'state', 'non_stop')
 # get_all_instances()
-terminate_instance()
+# terminate_instance()
 
 
