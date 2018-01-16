@@ -13,20 +13,59 @@ def get_all_instances(region='us-east-1'):
 	return active_instances
 
 
-def create_instance(name, tag_key, tag_val, region='us-east-1'):
+def create_instance(name="tomcat_elb",maxx=1,region='us-east-1'):
+	ec2_name = name+"{:%Y%m%d%H%M%S}".format(datetime.datetime.now())
 	ec2 = boto3.resource('ec2', region_name=region)
 	instance = ec2.create_instances(
 		ImageId = 'ami-aa2ea6d0',
-	    MinCount = 1,
-	    MaxCount = 1,
-	    KeyName = 'imac_new',
-	    InstanceType = 't2.micro'
+		MinCount = 1,
+		MaxCount = maxx,
+		InstanceType = 't2.micro',
+		KeyName='imac_2018',
+		TagSpecifications=[
+			{
+				'ResourceType':'instance',
+				'Tags':[
+					{
+						'Key': 'Name',
+						'Value':ec2_name
+					}
+				]
+			}
+		]
 	)
-	instance_id = instance[0].id
-	ec2.create_tags(
-                    Resources = [instance_id],
-                    Tags = [{'Key': tag_key, 'Value': tag_val}]
-                    )
+	ins = instance[0]
+	ins.wait_until_running()
+	ins.load() ## reload
+	instances = ins.id
+	print "Instance Initliazed %s " % instances
+	return instances
+
+
+def desc_instances(ins_ids,region='us-east-1'):
+	ec2 = boto3.client('ec2')
+	bootstrap = {}
+	all_bootstraps = []
+	ins = ec2.describe_instances(InstanceIds=ins_ids)
+
+	for each_running in ins['Reservations']:
+		key = None
+		fqdn = None
+		name = None
+		ins_id = None
+
+		for each in each_running['Instances']:
+			
+			key = each['KeyName']
+			fqdn = each['PublicDnsName']
+			name = each['Tags'][0]['Value']
+			ins_id = each['InstanceId'] 
+			break
+
+		bootstrap = {'key':key, 'fqdn':fqdn,'name':name, 'ins_id':ins_id}
+		all_bootstraps.append(bootstrap)
+	print all_bootstraps
+	return all_bootstraps
 
 
 def terminate_instance(instance_id=None, region='us-east-1'):
