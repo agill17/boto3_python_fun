@@ -1,6 +1,5 @@
 import boto3,datetime,time
 
-
 class provision_ec2:
 
 	def __init__(self,region='us-east-1'):
