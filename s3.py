@@ -2,6 +2,7 @@ import boto3
 import os
 import random
 
+
 def get_all_bucket_names():
 	s3 = boto3.client('s3')
 	bucket_names = []
